@@ -1,132 +1,220 @@
 import Link from 'next/link';
-import { BookOpen, Sparkles, TrendingUp } from 'lucide-react';
-import api from '@/lib/api';
+import { BookOpen, Layers, ChevronRight, GraduationCap, ArrowRight } from 'lucide-react';
 
-// This is a Server Component. We can fetch data directly or use our axios instance carefully.
-// Next.js fetch natively supports deduping and caching. Since we are using an external Express API,
-// we can use the native fetch for Server Components to get Next.js caching benefits.
 async function getTopics() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const res = await fetch(`${apiUrl}/api/topics`, { next: { revalidate: 60 } });
-  if (!res.ok) {
-    return [];
-  }
+  if (!res.ok) return [];
   return res.json();
 }
 
 async function getRecentCourses() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-  // Assuming the public courses route supports some form of fetching all or recent.
-  // We'll fetch all and slice for the homepage.
   const res = await fetch(`${apiUrl}/api/courses`, { next: { revalidate: 60 } });
-  if (!res.ok) {
-    return [];
-  }
+  if (!res.ok) return [];
   const data = await res.json();
-  return data.slice(0, 3); // 3 recent
+  return data.slice(0, 3);
 }
+
+// A stable color palette for topic cards
+const TOPIC_COLORS = [
+  { bg: 'bg-indigo-50', icon: 'bg-indigo-100 text-indigo-600', badge: 'text-indigo-600' },
+  { bg: 'bg-sky-50', icon: 'bg-sky-100 text-sky-600', badge: 'text-sky-600' },
+  { bg: 'bg-amber-50', icon: 'bg-amber-100 text-amber-600', badge: 'text-amber-600' },
+  { bg: 'bg-emerald-50', icon: 'bg-emerald-100 text-emerald-600', badge: 'text-emerald-600' },
+  { bg: 'bg-rose-50', icon: 'bg-rose-100 text-rose-600', badge: 'text-rose-600' },
+  { bg: 'bg-violet-50', icon: 'bg-violet-100 text-violet-600', badge: 'text-violet-600' },
+  { bg: 'bg-teal-50', icon: 'bg-teal-100 text-teal-600', badge: 'text-teal-600' },
+  { bg: 'bg-orange-50', icon: 'bg-orange-100 text-orange-600', badge: 'text-orange-600' },
+];
 
 export default async function HomePage() {
   const topics = await getTopics();
   const recentCourses = await getRecentCourses();
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white pt-16 pb-32 sm:pt-24 sm:pb-40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-gray-900 mb-8">
-            Master Any Subject with <br/><span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">EduHub</span>
+    <div className="flex flex-col">
+
+      {/* ─── Hero ─── */}
+      <section className="relative bg-white pt-20 pb-24 sm:pt-28 sm:pb-32 overflow-hidden">
+        {/* Subtle dot grid background */}
+        <div
+          className="absolute inset-0 -z-10 opacity-40"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #e2e8f0 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+          }}
+        />
+        {/* Soft gradient overlay */}
+        <div className="absolute inset-x-0 top-0 -z-10 h-72 bg-gradient-to-b from-white to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-white to-transparent" />
+
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/5 border border-primary/10 px-4 py-1.5 mb-8">
+            <GraduationCap className="w-4 h-4 text-primary" />
+            <span className="text-xs font-semibold text-primary tracking-wide uppercase">Free Learning Platform</span>
+          </div>
+
+          <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-slate-900 leading-[1.1]">
+            Learn anything,{' '}
+            <span className="text-primary">completely free.</span>
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500 mb-10">
-            Access hundreds of free courses, videos, podcasts, and articles. Elevate your skills at your own pace, completely free.
+          <p className="mt-5 max-w-2xl mx-auto text-lg text-slate-500 leading-relaxed">
+            Access hundreds of courses, video lessons, podcasts, and articles. Build real skills at your own pace — no subscription needed.
           </p>
-          <div className="flex justify-center gap-4">
-            <Link href="/topics" className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-black hover:bg-gray-800 rounded-full shadow-sm transition-all">
-              Explore Topics
-            </Link>
-            <Link href="/courses" className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-gray-900 bg-white border border-gray-300 hover:bg-gray-50 rounded-full shadow-sm transition-all">
-              Browse Courses
-            </Link>
-          </div>
-        </div>
-        
-        {/* Decorative background block */}
-        <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
-          <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style={{clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'}}></div>
-        </div>
-      </section>
 
-      {/* Topics Grid */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-8">
-            <Sparkles className="w-6 h-6 text-yellow-500" />
-            <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Explore Categories</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {topics.length > 0 ? topics.map((topic: any) => (
-              <Link key={topic.id} href={`/topics/${topic.slug}`} className="group relative bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all hover:border-blue-100 flex flex-col items-start gap-4 h-full">
-                <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center p-3 group-hover:scale-110 transition-transform">
-                  <BookOpen className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{topic.name}</h3>
-                  <p className="text-gray-500 text-sm line-clamp-2">{topic.description || 'Explore courses and lessons in this topic.'}</p>
-                </div>
-                <div className="mt-auto pt-4 flex gap-3 text-xs font-medium text-gray-400">
-                  <span>{topic._count?.courses || 0} Courses</span>
-                  <span>•</span>
-                  <span>{topic._count?.content || 0} Lessons</span>
-                </div>
-              </Link>
-            )) : (
-              <p className="text-gray-500">No topics available yet.</p>
-            )}
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/topics"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark transition-colors"
+            >
+              Browse Topics
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/courses"
+              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800 transition-colors"
+            >
+              View Courses
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Featured Courses */}
-      <section className="py-16 bg-white">
+      {/* ─── Topics Grid ─── */}
+      <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-8">
-            <TrendingUp className="w-6 h-6 text-green-500" />
-            <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Featured Courses</h2>
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">Categories</p>
+              <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Browse by Topic</h2>
+            </div>
+            <Link href="/topics" className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-dark transition-colors">
+              All Topics <ChevronRight className="w-4 h-4" />
+            </Link>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {recentCourses.length > 0 ? recentCourses.map((course: any) => (
-              <Link key={course.id} href={`/courses/${course.slug}`} className="flex flex-col group rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all h-full bg-white">
-                <div className="aspect-[16/9] w-full bg-gray-100 relative overflow-hidden">
-                  {course.thumbnailUrl ? (
-                    <img src={course.thumbnailUrl} alt={course.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
-                      <BookOpen className="w-12 h-12 text-blue-200" />
+
+          {topics.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {topics.map((topic: any, i: number) => {
+                const palette = TOPIC_COLORS[i % TOPIC_COLORS.length];
+                return (
+                  <Link
+                    key={topic.id}
+                    href={`/topics/${topic.slug}`}
+                    className={`group flex flex-col gap-4 p-5 rounded-2xl ${palette.bg} border border-transparent hover:border-slate-200 hover:shadow-card-hover transition-all`}
+                  >
+                    <div className={`w-10 h-10 rounded-xl ${palette.icon} flex items-center justify-center shrink-0`}>
+                      <Layers className="w-5 h-5" />
                     </div>
-                  )}
-                  <div className="absolute top-3 left-3">
-                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm shadow-sm rounded-full text-xs font-semibold text-gray-700">
-                      {course.topic?.name}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">{course.title}</h3>
-                  <p className="text-gray-500 text-sm line-clamp-3 mb-4 flex-1">{course.description || 'Start learning today with this comprehensive course.'}</p>
-                  <div className="flex items-center text-sm font-medium text-gray-400 mt-auto">
-                    <span>{course._count?.content || 0} Lessons included</span>
-                  </div>
-                </div>
-              </Link>
-            )) : (
-              <p className="text-gray-500">No courses available yet.</p>
-            )}
-          </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-slate-900 mb-1 group-hover:text-primary transition-colors truncate">
+                        {topic.name}
+                      </h3>
+                      <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                        {topic.description || 'Explore lessons and courses on this topic.'}
+                      </p>
+                    </div>
+                    <div className={`flex items-center gap-3 text-xs font-medium ${palette.badge}`}>
+                      <span>{topic._count?.courses || 0} Courses</span>
+                      <span className="text-slate-300">·</span>
+                      <span>{topic._count?.content || 0} Lessons</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-14 text-slate-400">
+              <Layers className="w-10 h-10 mx-auto mb-3 opacity-30" />
+              <p>No topics have been added yet.</p>
+            </div>
+          )}
         </div>
       </section>
+
+      {/* ─── Featured Courses ─── */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">Learning Paths</p>
+              <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Featured Courses</h2>
+            </div>
+            <Link href="/courses" className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-dark transition-colors">
+              All Courses <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {recentCourses.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {recentCourses.map((course: any) => (
+                <Link
+                  key={course.id}
+                  href={`/courses/${course.slug}`}
+                  className="group flex flex-col rounded-2xl border border-slate-100 overflow-hidden hover:shadow-card-hover hover:border-slate-200 transition-all bg-white"
+                >
+                  <div className="aspect-[16/9] w-full relative overflow-hidden bg-slate-50">
+                    {course.thumbnailUrl ? (
+                      <img
+                        src={course.thumbnailUrl}
+                        alt={course.title}
+                        className="object-cover w-full h-full group-hover:scale-[1.03] transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+                        <BookOpen className="w-10 h-10 text-slate-300" />
+                      </div>
+                    )}
+                    {course.topic?.name && (
+                      <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-slate-700 shadow-sm">
+                        {course.topic.name}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-base font-semibold text-slate-900 mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                      {course.title}
+                    </h3>
+                    <p className="text-sm text-slate-400 line-clamp-2 mb-4 flex-1 leading-relaxed">
+                      {course.description || 'Start learning with this comprehensive course.'}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-slate-400 mt-auto pt-4 border-t border-slate-50">
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>{course._count?.content || 0} lessons included</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-14 text-slate-400">
+              <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-30" />
+              <p>No courses have been added yet.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ─── CTA Banner ─── */}
+      <section className="bg-slate-950 py-20">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">
+            Ready to start learning?
+          </h2>
+          <p className="text-slate-400 mb-8 text-base">
+            Everything is completely free. No hidden fees, no account required to browse.
+          </p>
+          <Link
+            href="/topics"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-semibold text-white hover:bg-primary-dark transition-colors shadow-lg"
+          >
+            Explore All Topics <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
     </div>
   );
 }

@@ -1,47 +1,59 @@
 import { BookOpen, Github, Twitter } from 'lucide-react';
 import Link from 'next/link';
 
+const footerLinks = [
+  { href: '/topics', label: 'Topics' },
+  { href: '/courses', label: 'Courses' },
+  { href: '/admin', label: 'Admin' },
+];
+
 export default function Footer() {
   return (
-    <footer className="bg-white border-t mt-auto">
-      <div className="mx-auto max-w-7xl overflow-hidden px-6 py-12 sm:py-16 lg:px-8">
-        <nav className="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
-          <div className="pb-6 text-center">
-            <Link href="/topics" className="text-sm leading-6 text-gray-600 hover:text-gray-900">
-              Topics
+    <footer className="bg-slate-950 text-slate-400 mt-auto">
+      <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-10">
+          {/* Brand */}
+          <div className="flex flex-col items-center sm:items-start gap-3">
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center">
+                <BookOpen className="h-4 w-4 text-white" />
+              </div>
+              <span className="font-bold text-white text-base">EduHub</span>
             </Link>
+            <p className="text-sm text-center sm:text-left text-slate-500 max-w-xs">
+              Free, high-quality educational content for everyone.
+            </p>
           </div>
-          <div className="pb-6 text-center">
-            <Link href="/courses" className="text-sm leading-6 text-gray-600 hover:text-gray-900">
-              Courses
-            </Link>
-          </div>
-          <div className="pb-6 text-center">
-            <Link href="/about" className="text-sm leading-6 text-gray-600 hover:text-gray-900">
-              About
-            </Link>
-          </div>
-          <div className="pb-6 text-center">
-            <Link href="/admin" className="text-sm leading-6 text-gray-600 hover:text-gray-900">
-              Admin Login
-            </Link>
-          </div>
-        </nav>
-        <div className="mt-10 flex justify-center space-x-10">
-          <a href="#" className="text-gray-400 hover:text-gray-500">
-            <span className="sr-only">GitHub</span>
-            <Github className="h-6 w-6" aria-hidden="true" />
-          </a>
-          <a href="#" className="text-gray-400 hover:text-gray-500">
-            <span className="sr-only">Twitter</span>
-            <Twitter className="h-6 w-6" aria-hidden="true" />
-          </a>
+
+          {/* Links */}
+          <nav className="flex flex-wrap justify-center sm:justify-end gap-x-8 gap-y-3" aria-label="Footer">
+            {footerLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm text-slate-400 hover:text-white transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         </div>
-        <div className="mt-10 flex flex-col items-center justify-center">
-          <BookOpen className="h-8 w-8 text-gray-300 mb-4" />
-          <p className="text-center text-xs leading-5 text-gray-500">
-            &copy; {new Date().getFullYear()} EduHub, Inc. All rights reserved.
+
+        {/* Bottom bar */}
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-800 pt-8">
+          <p className="text-xs text-slate-600">
+            &copy; {new Date().getFullYear()} EduHub. All rights reserved.
           </p>
+          <div className="flex items-center gap-5">
+            <a href="#" className="text-slate-600 hover:text-slate-300 transition-colors">
+              <span className="sr-only">GitHub</span>
+              <Github className="h-4 w-4" />
+            </a>
+            <a href="#" className="text-slate-600 hover:text-slate-300 transition-colors">
+              <span className="sr-only">Twitter</span>
+              <Twitter className="h-4 w-4" />
+            </a>
+          </div>
         </div>
       </div>
     </footer>

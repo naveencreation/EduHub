@@ -1,14 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, Search, Menu } from 'lucide-react';
+import { BookOpen, Search, Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+
+const navLinks = [
+  { href: '/topics', label: 'Topics' },
+  { href: '/courses', label: 'Courses' },
+];
 
 export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,37 +24,49 @@ export default function Navbar() {
     }
   };
 
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+
   return (
-    <nav className="bg-white border-b sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex flex-shrink-0 items-center gap-2">
-              <BookOpen className="h-8 w-8 text-primary" />
-              <span className="font-bold text-xl tracking-tight hidden sm:block">EduHub</span>
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex items-center gap-8">
+            <Link href="/" className="flex flex-shrink-0 items-center gap-2.5">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <BookOpen className="h-4.5 w-4.5 text-white h-[18px] w-[18px]" />
+              </div>
+              <span className="font-bold text-lg tracking-tight text-slate-900 hidden sm:block">EduHub</span>
             </Link>
-            <div className="hidden sm:-my-px sm:ml-8 sm:flex sm:space-x-8">
-              <Link href="/topics" className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                Topics
-              </Link>
-              <Link href="/courses" className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                Courses
-              </Link>
+
+            {/* Desktop nav links */}
+            <div className="hidden sm:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    isActive(link.href)
+                      ? 'text-primary bg-primary-light'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
-          
-          <div className="flex items-center justify-end flex-1 sm:ml-6 max-w-md">
-            <form onSubmit={handleSearch} className="w-full hidden sm:block">
-              <label htmlFor="search" className="sr-only">Search</label>
+
+          {/* Search + mobile toggle */}
+          <div className="flex items-center gap-3">
+            <form onSubmit={handleSearch} className="hidden sm:block">
               <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Search className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </div>
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                 <input
                   id="search"
                   name="search"
-                  className="block w-full rounded-md border-0 py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 bg-gray-50 hover:bg-white transition-colors"
-                  placeholder="Search lessons, courses..."
+                  className="w-56 lg:w-72 rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  placeholder="Search topics, courses..."
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -56,39 +74,43 @@ export default function Navbar() {
               </div>
             </form>
 
-            <div className="flex items-center sm:hidden">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                <span className="sr-only">Open main menu</span>
-                <Menu className="block h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
+            <button
+              type="button"
+              className="sm:hidden p-2 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <span className="sr-only">Toggle menu</span>
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
       </div>
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="sm:hidden border-t">
-          <div className="space-y-1 pb-3 pt-2">
-            <Link href="/topics" className="block border-l-4 border-transparent py-2 pl-4 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">
-              Topics
-            </Link>
-            <Link href="/courses" className="block border-l-4 border-transparent py-2 pl-4 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">
-              Courses
-            </Link>
+        <div className="sm:hidden border-t border-slate-100 bg-white">
+          <div className="px-4 pt-3 pb-2 space-y-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive(link.href)
+                    ? 'text-primary bg-primary-light'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
-          <div className="border-t border-gray-200 pb-4 pt-4 px-4">
+          <div className="px-4 pb-4">
             <form onSubmit={handleSearch}>
               <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Search className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </div>
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                 <input
-                  className="block w-full rounded-md border-0 py-2 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                   placeholder="Search..."
                   type="search"
                   value={searchQuery}
