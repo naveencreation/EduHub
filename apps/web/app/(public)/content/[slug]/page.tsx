@@ -17,11 +17,13 @@ async function getContent(slug: string) {
 }
 
 export default async function ContentPage({ params }: { params: { slug: string } }) {
-  const content = await getContent(params.slug);
+  const data = await getContent(params.slug);
 
-  if (!content) {
+  if (!data || !data.content) {
     notFound();
   }
+
+  const { content } = data;
 
   const renderPlayer = () => {
     switch (content.type) {

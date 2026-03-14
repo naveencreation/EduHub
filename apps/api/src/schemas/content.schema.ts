@@ -7,7 +7,7 @@ export const createContentSchema = z.object({
     topicId: z.string().uuid("Invalid topic ID"),
     courseId: z.string().uuid("Invalid course ID").optional().nullable(),
     title: z.string().min(1, "Title is required").max(100),
-    slug: z.string().min(1, "Slug is required").max(100),
+    slug: z.string().min(1, "Slug is required").max(100).optional(),
     type: ContentTypeEnum,
     description: z.string().optional().nullable(),
     body: z.string().optional().nullable(),
