@@ -41,9 +41,29 @@ app.get("/api/health", (req: Request, res: Response) => {
   });
 });
 
-// TODO: Routes will be added here
-// - Public routes: /api/topics, /api/courses, /api/content, /api/search, /api/tags
-// - Admin routes: /api/admin/* (auth, topics, courses, content, tags)
+import authRoutes from "./routes/admin/auth.routes";
+import adminTopicRoutes from "./routes/admin/topics.routes";
+import adminCourseRoutes from "./routes/admin/courses.routes";
+import adminContentRoutes from "./routes/admin/content.routes";
+import adminTagRoutes from "./routes/admin/tags.routes";
+import publicTopicRoutes from "./routes/public/topics.routes";
+import publicCourseRoutes from "./routes/public/courses.routes";
+import publicContentRoutes from "./routes/public/content.routes";
+import publicTagRoutes from "./routes/public/tags.routes";
+import { requireAuth } from "./middlewares/requireAuth";
+
+// Public API Routes
+app.use("/api/topics", publicTopicRoutes);
+app.use("/api/courses", publicCourseRoutes);
+app.use("/api/content", publicContentRoutes);
+app.use("/api/tags", publicTagRoutes);
+
+// Admin API Routes
+app.use("/api/admin/auth", authRoutes);
+app.use("/api/admin/topics", requireAuth, adminTopicRoutes);
+app.use("/api/admin/courses", requireAuth, adminCourseRoutes);
+app.use("/api/admin/content", requireAuth, adminContentRoutes);
+app.use("/api/admin/tags", requireAuth, adminTagRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
