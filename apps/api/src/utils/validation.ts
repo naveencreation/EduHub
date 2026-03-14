@@ -6,25 +6,31 @@ export function validateSlug(slug: unknown): string {
   if (typeof slug !== 'string' || slug.trim().length === 0) {
     throw new Error('Invalid slug: must be a non-empty string');
   }
+
+  const normalized = slug.trim();
+
   // Only allow alphanumeric, hyphens, and underscores
-  if (!/^[a-z0-9_-]+$/i.test(slug)) {
+  if (!/^[a-z0-9_-]+$/i.test(normalized)) {
     throw new Error('Invalid slug: only alphanumeric, hyphens, and underscores allowed');
   }
-  return slug.trim();
+  return normalized;
 }
 
 export function validateId(id: unknown): string {
   if (typeof id !== 'string' || id.trim().length === 0) {
     throw new Error('Invalid ID: must be a non-empty string');
   }
+
+  const normalized = id.trim();
+
   // UUID validation (basic)
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(normalized)) {
     // If not UUID format, at least ensure it's alphanumeric
-    if (!/^[a-z0-9_-]+$/i.test(id)) {
+    if (!/^[a-z0-9_-]+$/i.test(normalized)) {
       throw new Error('Invalid ID format');
     }
   }
-  return id.trim();
+  return normalized;
 }
 
 export function validatePageNumber(page: unknown): number {

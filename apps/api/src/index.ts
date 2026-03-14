@@ -94,9 +94,13 @@ app.use((req: Request, res: Response) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`✅ Backend running at http://localhost:${PORT}`);
-  console.log(`📡 Frontend URL: ${FRONTEND_URL}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
-});
+// Start server when run directly (not when imported for tests)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`✅ Backend running at http://localhost:${PORT}`);
+    console.log(`📡 Frontend URL: ${FRONTEND_URL}`);
+    console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+  });
+}
+
+export default app;
