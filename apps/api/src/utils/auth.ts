@@ -1,12 +1,25 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error(
-    "❌ FATAL: JWT_SECRET environment variable is not set. Server cannot start without a valid JWT secret."
-  );
-}
+// Get JWT_SECRET with development fallback
+const JWT_SECRET = (() => {
+  const secret = process.env.JWT_SECRET;
+  
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "❌ FATAL: JWT_SECRET environment variable is not set. Server cannot start in production without a valid JWT secret."
+      );
+    }
+    // Development: warn but use fallback
+    console.warn(
+      "⚠️  WARNING: JWT_SECRET not set. Using development fallback. Set JWT_SECRET in .env for production."
+    );
+    return "dev-secret-key-change-in-production";
+  }
+  
+  return secret;
+})();
 
 // 7 days expiration as per PRD
 const JWT_EXPIRES_IN = "7d";
