@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -144,13 +145,16 @@ export default function TipTapEditor({ value, onChange }: TipTapEditorProps) {
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
+    immediatelyRender: false,
   });
 
   // Keep editor synced if initial value changes externally (e.g. initial load)
   // Only update if it hasn't been edited recently to avoid jumping cursor
-  if (editor && value && editor.getHTML() !== value && !editor.isFocused) {
-    editor.commands.setContent(value);
-  }
+  useEffect(() => {
+    if (editor && value && editor.getHTML() !== value && !editor.isFocused) {
+      editor.commands.setContent(value);
+    }
+  }, [value, editor]);
 
   return (
     <div className="flex flex-col border border-gray-300 rounded-md overflow-hidden bg-white shadow-sm">
