@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email           String   @unique
+  passwordHash    String
+  name            String?
+  lastLoginAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("admins")
+}
+
+model Topic {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  slug            String   @unique
+  description     String?
+  thumbnailUrl    String?
+  sortOrder       Int      @default(0)
+  isPublished     Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  courses         Course[]
+  content         Content[]
+
+  @@map("topics")
+}
+
+model Course {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  topicId         String   @db.Uuid
+  title           String
+  slug            String
+  description     String?
+  thumbnailUrl    String?
+  sortOrder       Int      @default(0)
+  isPublished     Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  topic           Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  content         Content[]
+
+  @@unique([topicId, slug])
+  @@map("courses")
+}
+
+model Content {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  topicId         String   @db.Uuid
+  courseId        String?  @db.Uuid  // nullable = standalone content
+  title           String
+  slug            String
+  type            ContentType
+  description     String?
+  body            String?  // for blog type only
+  fileUrl         String?  // for audio/image (JSON array for galleries)
+  streamId        String?  // for video type (Cloudflare Stream ID, not YouTube)
+  thumbnailUrl    String?
+  durationSecs    Int?     // for video/audio
+  sortOrder       Int      @default(0)
+  isPublished     Boolean  @default(false)
+  publishedAt     DateTime?
+  searchVector    String?  @db.Text // for PostgreSQL full-text search
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  topic           Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  course          Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  contentTags     ContentTag[]
+
+  @@unique([topicId, courseId, slug])
+  @@map("content")
+}
+
+model Tag {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String   @unique
+  slug            String   @unique
+  createdAt       DateTime @default(now())
+
+  contentTags     ContentTag[]
+
+  @@map("tags")
+}
+
+model ContentTag {
+  contentId       String   @db.Uuid
+  tagId           String   @db.Uuid
+
+  content         Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  tag             Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, tagId])
+  @@map("content_tags")
+}
+
+enum ContentType {
+  VIDEO
+  AUDIO
+  IMAGE
+  BLOG
+}

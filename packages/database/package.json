@@ -1,0 +1,21 @@
+{
+  "name": "@eduhub/database",
+  "version": "1.0.0",
+  "description": "Prisma schema and database utilities",
+  "private": true,
+  "scripts": {
+    "db:migrate": "npx prisma migrate dev",
+    "db:migrate:prod": "npx prisma migrate deploy",
+    "db:seed": "npx tsx seed.ts",
+    "db:studio": "npx prisma studio",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "prisma": "^5.7.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.7.0"
+  }
+}
