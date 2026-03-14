@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { prisma } from "../../db";
+import { validateSlug } from "../../utils/validation";
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.get("/", async (req: Request, res: Response) => {
     });
     return res.status(200).json(topics);
   } catch (error) {
+    console.error("Failed to fetch topics:", error);
     return res.status(500).json({ error: "Failed to fetch topics" });
   }
 });
@@ -24,8 +26,9 @@ router.get("/", async (req: Request, res: Response) => {
 // GET /api/topics/:slug - Get single published topic with published courses
 router.get("/:slug", async (req: Request, res: Response) => {
   try {
-    const { slug } = req.params;
-    
+    // Validate slug input
+    const slug = validateSlug(req.params.slug);
+
     const topic = await prisma.topic.findFirst({
       where: { slug, isPublished: true },
       include: {
@@ -40,7 +43,7 @@ router.get("/:slug", async (req: Request, res: Response) => {
         },
         content: {
           where: { isPublished: true, courseId: null }, // Standalone content only
-          orderBy: { publishedAt: "desc" },
+          orderBy: { sortOrder: "asc" },
         },
       },
     });
@@ -51,6 +54,10 @@ router.get("/:slug", async (req: Request, res: Response) => {
 
     return res.status(200).json(topic);
   } catch (error) {
+    if (error instanceof Error && error.message.includes("Invalid")) {
+      return res.status(400).json({ error: error.message });
+    }
+    console.error("Failed to fetch topic:", error);
     return res.status(500).json({ error: "Failed to fetch topic" });
   }
 });

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import ContentForm from '@/components/admin/ContentForm';
 import api from '@/lib/api';
+import { getErrorMessage } from '@/lib/errors';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -47,8 +48,9 @@ export default function EditContentPage() {
       await api.delete(`/api/admin/content/${contentId}`);
       router.push('/admin/content');
       router.refresh();
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Failed to delete content');
+    } catch (error) {
+      const userMessage = getErrorMessage(error);
+      alert(`Failed to delete content: ${userMessage}`);
     }
   };
 

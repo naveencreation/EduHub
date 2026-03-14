@@ -1,7 +1,13 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_key_change_in_production";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error(
+    "❌ FATAL: JWT_SECRET environment variable is not set. Server cannot start without a valid JWT secret."
+  );
+}
+
 // 7 days expiration as per PRD
 const JWT_EXPIRES_IN = "7d";
 

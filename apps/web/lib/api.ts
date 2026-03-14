@@ -8,11 +8,30 @@ const api = axios.create({
   },
 });
 
-// Optionally add interceptors here to catch 401s and trigger logout
+// Global response interceptor for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // We can handle global 401 redirects later in context or components
+    // Handle 401 Unauthorized - redirect to login
+    if (error.response?.status === 401) {
+      // Clear auth context and redirect to login
+      if (typeof window !== 'undefined') {
+        // Only run in browser, not SSR
+        window.location.href = '/admin';
+      }
+    }
+
+    // Handle network errors
+    if (!error.response) {
+      console.error('Network error:', error.message);
+      error.message = 'Network error. Please check your connection and try again.';
+    }
+
+    // Handle 500 errors
+    if (error.response?.status >= 500) {
+      console.error('Server error:', error.response.status, error.response.data);
+    }
+
     return Promise.reject(error);
   }
 );

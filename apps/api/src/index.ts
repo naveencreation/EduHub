@@ -67,15 +67,31 @@ app.use("/api/admin/tags", requireAuth, adminTagRoutes);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error("Error:", err);
-  res.status(err.status || 500).json({
-    error: err.message || "Internal server error",
+  const status = err.status || err.statusCode || 500;
+  const message =
+    process.env.NODE_ENV === "production"
+      ? "Internal server error"
+      : err.message || "Internal server error";
+
+  // Log error for debugging
+  console.error(`[${new Date().toISOString()}] [${status}] ${err.message || "Unknown error"}`);
+  if (err.stack) {
+    console.error(err.stack);
+  }
+
+  res.status(status).json({
+    error: message,
+    ...(process.env.NODE_ENV === "development" && { details: err.message }),
   });
 });
 
 // 404 handler
 app.use((req: Request, res: Response) => {
-  res.status(404).json({ error: "Route not found" });
+  res.status(404).json({ 
+    error: "Route not found",
+    path: req.path,
+    method: req.method,
+  });
 });
 
 // Start server

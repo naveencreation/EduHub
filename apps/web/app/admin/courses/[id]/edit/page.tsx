@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import CourseForm from '@/components/admin/CourseForm';
 import api from '@/lib/api';
+import { getErrorMessage } from '@/lib/errors';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -40,8 +41,9 @@ export default function EditCoursePage() {
       await api.delete(`/api/admin/courses/${courseId}`);
       router.push('/admin/courses');
       router.refresh();
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Failed to delete course');
+    } catch (error) {
+      const userMessage = getErrorMessage(error);
+      alert(`Failed to delete course: ${userMessage}`);
     }
   };
 

@@ -229,15 +229,73 @@ router.post(
   }
 );
 
-// Upload Presign routes (Placeholder for Cloudflare R2 / Stream)
+// Upload Presign routes (Cloudflare R2 / Stream)
 router.post("/upload/presign", async (req: Request, res: Response) => {
-  // TODO: Add AWS SDK to generate presigned R2 URLs
-  return res.status(200).json({ uploadUrl: "placeholder_r2_url", fileUrl: "placeholder_file_url" });
+  try {
+    const { filename, contentType } = req.body;
+
+    // Validate input
+    if (!filename || !contentType) {
+      return res
+        .status(400)
+        .json({ error: "filename and contentType are required" });
+    }
+
+    const cloudflareAccountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+    const cloudflareApiToken = process.env.CLOUDFLARE_API_TOKEN;
+    const r2BucketName = process.env.CLOUDFLARE_R2_BUCKET_NAME;
+
+    if (!cloudflareAccountId || !cloudflareApiToken || !r2BucketName) {
+      console.error("❌ Cloudflare R2 credentials not configured");
+      return res
+        .status(500)
+        .json({ error: "R2 upload not configured. Contact admin." });
+    }
+
+    // Generate presigned URL for R2
+    // In production, use AWS SDK v3 or @aws-sdk/s3-request-presigner
+    // For MVP, return placeholder with clear instructions to implement
+    const uploadUrl = `https://${r2BucketName}.s3.us-east-1.amazonaws.com/${filename}`;
+
+    return res.status(200).json({
+      uploadUrl,
+      fileUrl: `https://uploads.eduhub.local/${filename}`, // CDN URL
+      warning:
+        "⚠️ Presigned URL generation not fully implemented. Use S3 SDK for production.",
+    });
+  } catch (error) {
+    console.error("R2 upload presign error:", error);
+    return res.status(500).json({ error: "Failed to generate upload URL" });
+  }
 });
 
 router.post("/upload/video", async (req: Request, res: Response) => {
-  // TODO: Call Cloudflare Stream API to get presigned upload URL
-  return res.status(200).json({ uploadUrl: "placeholder_stream_url" });
+  try {
+    const cloudflareStreamAccountId = process.env.CLOUDFLARE_STREAM_ACCOUNT_ID;
+    const cloudflareApiToken = process.env.CLOUDFLARE_API_TOKEN;
+
+    if (!cloudflareStreamAccountId || !cloudflareApiToken) {
+      console.error("❌ Cloudflare Stream credentials not configured");
+      return res
+        .status(500)
+        .json({ error: "Stream upload not configured. Contact admin." });
+    }
+
+    // Get presigned URL from Cloudflare Stream API
+    // https://developers.cloudflare.com/stream/uploading-videos/
+    // This requires making a request to: POST /accounts/{account_id}/stream/upload
+    const uploadUrl = `https://api.cloudflare.com/client/v4/accounts/${cloudflareStreamAccountId}/media`;
+
+    return res.status(200).json({
+      uploadUrl,
+      warning:
+        "⚠️ Stream presigned URL generation not fully implemented. Make authenticated request to Cloudflare API.",
+      documentationLink: "https://developers.cloudflare.com/stream/uploading-videos/",
+    });
+  } catch (error) {
+    console.error("Stream upload presign error:", error);
+    return res.status(500).json({ error: "Failed to generate stream upload URL" });
+  }
 });
 
 export default router;

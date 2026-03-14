@@ -35,8 +35,13 @@ export default function AdminLoginPage() {
       if (response.status === 200) {
         setAuthenticated(true, response.data.admin);
       }
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Login failed. Please try again.');
+    } catch (error) {
+      const message = error instanceof Error 
+        ? error.message 
+        : (error as any)?.response?.data?.error 
+        ? (error as any).response.data.error
+        : 'Login failed. Please try again.';
+      setError(message);
     }
   };
 

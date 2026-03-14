@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import TopicForm from '@/components/admin/TopicForm';
 import api from '@/lib/api';
+import { getErrorMessage } from '@/lib/errors';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -35,8 +36,9 @@ export default function EditTopicPage() {
       await api.delete(`/api/admin/topics/${topicId}`);
       router.push('/admin/topics');
       router.refresh();
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Failed to delete topic');
+    } catch (error) {
+      const userMessage = getErrorMessage(error);
+      alert(`Failed to delete topic: ${userMessage}`);
     }
   };
 

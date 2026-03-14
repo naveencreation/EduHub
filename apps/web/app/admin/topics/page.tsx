@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
+import { getErrorMessage } from '@/lib/errors';
 import Link from 'next/link';
 import DraggableList from '@/components/admin/DraggableList';
 
@@ -43,9 +44,9 @@ export default function TopicsPage() {
     try {
       const topicIds = newOrder.map(t => t.id);
       await api.post('/api/admin/topics/reorder', { topicIds });
-    } catch (e) {
-      console.error('Failed to save reorder', e);
-      alert('Failed to save new order.');
+    } catch (error) {
+      const userMessage = getErrorMessage(error);
+      alert(`Failed to save new order: ${userMessage}`);
       fetchTopics(); // Revert
     } finally {
       setIsSavingReorder(false);
