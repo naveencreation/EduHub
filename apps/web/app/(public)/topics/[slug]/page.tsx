@@ -1,15 +1,36 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FolderOpen, PlayCircle, BookOpen } from 'lucide-react';
+import type { Topic } from '@/lib/api-types';
 
-async function getTopic(slug: string) {
+async function getTopic(slug: string): Promise<Topic | null> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-  const res = await fetch(`${apiUrl}/api/topics/${slug}`, { next: { revalidate: 60 } });
-  if (!res.ok) {
-    if (res.status === 404) return null;
-    throw new Error('Failed to fetch topic');
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const res = await fetch(`${apiUrl}/api/topics/${slug}`, {
+      next: { revalidate: 60 },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      if (res.status === 404) return null;
+      console.error(`Failed to fetch topic: HTTP ${res.status}`);
+      throw new Error('Failed to fetch topic');
+    }
+
+    return await res.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error fetching topic:', error.message);
+    } else {
+      console.error('Error fetching topic:', error);
+    }
+    throw error;
   }
-  return res.json();
 }
 
 export default async function TopicDetailPage({ params }: { params: { slug: string } }) {

@@ -1,15 +1,36 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { BookOpen, PlayCircle, Clock, CheckCircle2 } from 'lucide-react';
+import type { Course } from '@/lib/api-types';
 
-async function getCourse(slug: string) {
+async function getCourse(slug: string): Promise<Course | null> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-  const res = await fetch(`${apiUrl}/api/courses/${slug}`, { next: { revalidate: 60 } });
-  if (!res.ok) {
-    if (res.status === 404) return null;
-    throw new Error('Failed to fetch course');
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const res = await fetch(`${apiUrl}/api/courses/${slug}`, {
+      next: { revalidate: 60 },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      if (res.status === 404) return null;
+      console.error(`Failed to fetch course: HTTP ${res.status}`);
+      throw new Error('Failed to fetch course');
+    }
+
+    return await res.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error fetching course:', error.message);
+    } else {
+      console.error('Error fetching course:', error);
+    }
+    throw error;
   }
-  return res.json();
 }
 
 export default async function CourseDetailPage({ params }: { params: { slug: string } }) {

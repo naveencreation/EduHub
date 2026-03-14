@@ -1,19 +1,99 @@
 import Link from 'next/link';
-import { BookOpen, Layers, ChevronRight, GraduationCap, ArrowRight } from 'lucide-react';
+import { BookOpen, Layers, ChevronRight, GraduationCap, ArrowRight, AlertCircle } from 'lucide-react';
+import type { Topic, Course } from '@/lib/api-types';
 
-async function getTopics() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-  const res = await fetch(`${apiUrl}/api/topics`, { next: { revalidate: 60 } });
-  if (!res.ok) return [];
-  return res.json();
+/**
+ * JSON-LD Schema for SEO
+ */
+function SchemaMarkup() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'EducationalOrganization',
+    name: 'EduHub',
+    url: 'https://eduhub.com',
+    description: 'Free online learning platform with courses and lessons',
+    sameAs: [
+      'https://twitter.com/eduhub',
+      'https://facebook.com/eduhub',
+    ],
+    founder: {
+      '@type': 'Organization',
+      name: 'EduHub Team',
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
 }
 
-async function getRecentCourses() {
+/**
+ * Fetch all published topics with proper error handling
+ */
+async function getTopics(): Promise<Topic[]> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-  const res = await fetch(`${apiUrl}/api/courses`, { next: { revalidate: 60 } });
-  if (!res.ok) return [];
-  const data = await res.json();
-  return data.slice(0, 3);
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+    const res = await fetch(`${apiUrl}/api/topics`, {
+      next: { revalidate: 60 },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      console.error(`Failed to fetch topics: HTTP ${res.status}`);
+      return [];
+    }
+
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error fetching topics:', error.message);
+    } else {
+      console.error('Error fetching topics:', error);
+    }
+    return [];
+  }
+}
+
+/**
+ * Fetch all published courses and return first 3 as featured
+ */
+async function getRecentCourses(): Promise<Course[]> {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+    const res = await fetch(`${apiUrl}/api/courses`, {
+      next: { revalidate: 60 },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      console.error(`Failed to fetch courses: HTTP ${res.status}`);
+      return [];
+    }
+
+    const data = await res.json();
+    return Array.isArray(data) ? data.slice(0, 3) : [];
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error fetching courses:', error.message);
+    } else {
+      console.error('Error fetching courses:', error);
+    }
+    return [];
+  }
 }
 
 // A stable color palette for topic cards
@@ -34,6 +114,8 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
+      {/* JSON-LD Schema for SEO */}
+      <SchemaMarkup />
 
       {/* ─── Hero ─── */}
       <section className="relative bg-white pt-20 pb-24 sm:pt-28 sm:pb-32 overflow-hidden">
@@ -96,7 +178,7 @@ export default async function HomePage() {
 
           {topics.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {topics.map((topic: any, i: number) => {
+              {topics.map((topic: Topic, i: number) => {
                 const palette = TOPIC_COLORS[i % TOPIC_COLORS.length];
                 return (
                   <Link
@@ -148,7 +230,7 @@ export default async function HomePage() {
 
           {recentCourses.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {recentCourses.map((course: any) => (
+              {recentCourses.map((course: Course) => (
                 <Link
                   key={course.id}
                   href={`/courses/${course.slug}`}
@@ -166,7 +248,7 @@ export default async function HomePage() {
                         <BookOpen className="w-10 h-10 text-slate-300" />
                       </div>
                     )}
-                    {course.topic?.name && (
+                    {course.topic && typeof course.topic === 'object' && 'name' in course.topic && (
                       <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-slate-700 shadow-sm">
                         {course.topic.name}
                       </span>

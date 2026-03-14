@@ -1,14 +1,35 @@
 import Link from 'next/link';
 import { Search as SearchIcon, PlayCircle, FolderOpen, BookOpen } from 'lucide-react';
+import type { CourseContent } from '@/lib/api-types';
 
-async function performSearch(query: string) {
+async function performSearch(query: string): Promise<CourseContent[]> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-  // Use no-store for search to ensure fresh results based on query parameter
-  const res = await fetch(`${apiUrl}/api/content/search?q=${encodeURIComponent(query)}`, { 
-    cache: 'no-store' 
-  });
-  if (!res.ok) return [];
-  return res.json();
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const res = await fetch(`${apiUrl}/api/content/search?q=${encodeURIComponent(query)}`, {
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      console.error(`Failed to search: HTTP ${res.status}`);
+      return [];
+    }
+
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error during search:', error.message);
+    } else {
+      console.error('Error during search:', error);
+    }
+    return [];
+  }
 }
 
 export default async function SearchPage({
@@ -17,8 +38,8 @@ export default async function SearchPage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const query = typeof searchParams.q === 'string' ? searchParams.q : '';
-  
-  let results: any[] = [];
+
+  let results: CourseContent[] = [];
   if (query) {
     results = await performSearch(query);
   }
@@ -49,9 +70,9 @@ export default async function SearchPage({
                 
                 {/* Visual Indicator */}
                 <div className="hidden sm:flex flex-shrink-0 w-16 h-16 bg-blue-50 text-blue-600 rounded-xl items-center justify-center">
-                  {item.type === 'VIDEO' && <PlayCircle className="w-8 h-8" />}
-                  {item.type === 'BLOG' && <BookOpen className="w-8 h-8" />}
-                  {item.type !== 'VIDEO' && item.type !== 'BLOG' && <FolderOpen className="w-8 h-8" />}
+                  {item.type === 'video' && <PlayCircle className="w-8 h-8" />}
+                  {item.type === 'blog' && <BookOpen className="w-8 h-8" />}
+                  {item.type !== 'video' && item.type !== 'blog' && <FolderOpen className="w-8 h-8" />}
                 </div>
 
                 <div className="flex-1 min-w-0">

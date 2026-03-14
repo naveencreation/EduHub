@@ -1,11 +1,35 @@
 import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
+import type { Topic } from '@/lib/api-types';
 
-async function getTopics() {
+async function getTopics(): Promise<Topic[]> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-  const res = await fetch(`${apiUrl}/api/topics`, { next: { revalidate: 60 } });
-  if (!res.ok) return [];
-  return res.json();
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const res = await fetch(`${apiUrl}/api/topics`, {
+      next: { revalidate: 60 },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      console.error(`Failed to fetch topics: HTTP ${res.status}`);
+      return [];
+    }
+
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error fetching topics:', error.message);
+    } else {
+      console.error('Error fetching topics:', error);
+    }
+    return [];
+  }
 }
 
 export default async function TopicsIndexPage() {
@@ -21,7 +45,7 @@ export default async function TopicsIndexPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {topics.map((topic: any) => (
+        {topics.map((topic: Topic) => (
           <Link key={topic.id} href={`/topics/${topic.slug}`} className="group flex flex-col bg-white rounded-2xl shadow-sm border p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center p-3">

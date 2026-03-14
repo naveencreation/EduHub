@@ -3,6 +3,28 @@ import { prisma } from "../../db";
 
 const router = Router();
 
+// GET /api/courses - List all published courses with topic info
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    const courses = await prisma.course.findMany({
+      where: { isPublished: true },
+      orderBy: { sortOrder: "asc" },
+      include: {
+        topic: {
+          select: { name: true, slug: true },
+        },
+        _count: {
+          select: { content: { where: { isPublished: true } } },
+        },
+      },
+    });
+    return res.status(200).json(courses);
+  } catch (error) {
+    console.error("Failed to fetch courses:", error);
+    return res.status(500).json({ error: "Failed to fetch courses" });
+  }
+});
+
 // GET /api/courses/:slug - Get single published course with published lessons
 router.get("/:slug", async (req: Request, res: Response) => {
   try {
