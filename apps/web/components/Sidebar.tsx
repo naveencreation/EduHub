@@ -37,11 +37,11 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="flex h-full w-64 flex-col border-r bg-gray-50/40">
-      <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+      <div className="flex h-full w-64 flex-col border-r border-slate-200 bg-white/50">
+      <div className="flex h-14 items-center border-b border-slate-200 px-4 lg:h-[60px] lg:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold">
-          <BookOpen className="h-6 w-6 text-primary" />
-          <span className="text-lg">EduHub Admin</span>
+          <BookOpen className="h-6 w-6 text-brand-emerald" />
+          <span className="text-lg text-brand-dark">EduHub Admin</span>
         </Link>
       </div>
       <div className="flex-1 overflow-auto py-2">
@@ -52,8 +52,8 @@ export default function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                  isActive ? 'bg-muted text-primary' : 'text-muted-foreground'
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-brand-emerald hover:bg-emerald-50 ${
+                  isActive ? 'bg-emerald-100 text-brand-emerald' : 'text-slate-600'
                 }`}
               >
                 <item.icon className="h-4 w-4" />

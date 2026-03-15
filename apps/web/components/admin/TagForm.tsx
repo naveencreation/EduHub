@@ -69,18 +69,18 @@ export default function TagForm({ initialData, tagId }: TagFormProps) {
         {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
       </div>
 
-      <div className="flex justify-end gap-3 border-t pt-4">
+      <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-md border bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+          className="rounded-md border border-slate-300 bg-white py-2 px-4 text-sm font-medium text-brand-slate shadow-sm hover:bg-brand-light-bg"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-md bg-black py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-800 disabled:bg-gray-400"
+          className="rounded-md bg-brand-emerald py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-emerald-600 disabled:bg-slate-400"
         >
           {isSubmitting ? 'Saving...' : isEditing ? 'Update Tag' : 'Create Tag'}
         </button>

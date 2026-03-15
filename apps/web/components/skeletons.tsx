@@ -5,11 +5,11 @@ import React from 'react';
  */
 export function TopicCardSkeleton() {
   return (
-    <div className="bg-white border rounded-2xl p-5 animate-pulse">
-      <div className="w-10 h-10 rounded-xl bg-gray-200 mb-4" />
-      <div className="h-5 bg-gray-200 rounded w-3/4 mb-2" />
-      <div className="h-3 bg-gray-100 rounded w-full mb-1" />
-      <div className="h-3 bg-gray-100 rounded w-2/3 mb-4" />
+    <div className="bg-white border border-slate-200 rounded-2xl p-5 animate-pulse">
+      <div className="w-10 h-10 rounded-xl bg-slate-200 mb-4" />
+      <div className="h-5 bg-slate-200 rounded w-3/4 mb-2" />
+      <div className="h-3 bg-slate-100 rounded w-full mb-1" />
+      <div className="h-3 bg-slate-100 rounded w-2/3 mb-4" />
       <div className="flex gap-3 text-xs">
         <div className="h-3 bg-gray-200 rounded w-20" />
         <div className="h-3 bg-gray-200 rounded w-20" />
@@ -23,14 +23,14 @@ export function TopicCardSkeleton() {
  */
 export function CourseCardSkeleton() {
   return (
-    <div className="bg-white border rounded-2xl overflow-hidden animate-pulse">
-      <div className="aspect-[16/9] w-full bg-gray-200" />
+    <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden animate-pulse">
+      <div className="aspect-[16/9] w-full bg-slate-200" />
       <div className="p-5">
-        <div className="h-5 bg-gray-200 rounded w-3/4 mb-2" />
-        <div className="h-3 bg-gray-100 rounded w-full mb-1" />
-        <div className="h-3 bg-gray-100 rounded w-2/3 mb-4" />
-        <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
-          <div className="h-3 bg-gray-200 rounded w-20" />
+        <div className="h-5 bg-slate-200 rounded w-3/4 mb-2" />
+        <div className="h-3 bg-slate-100 rounded w-full mb-1" />
+        <div className="h-3 bg-slate-100 rounded w-2/3 mb-4" />
+        <div className="flex items-center gap-2 pt-4 border-t border-slate-100">
+          <div className="h-3 bg-slate-200 rounded w-20" />
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@ export function CoursesGridSkeleton({ count = 3 }: { count?: number }) {
 export function LoadingSpinner() {
   return (
     <div className="flex flex-col items-center justify-center py-12">
-      <div className="w-12 h-12 border-4 border-slate-200 border-t-primary rounded-full animate-spin" />
+      <div className="w-12 h-12 border-4 border-slate-200 border-t-brand-emerald rounded-full animate-spin" />
       <p className="text-slate-600 mt-4 font-medium">Loading...</p>
     </div>
   );

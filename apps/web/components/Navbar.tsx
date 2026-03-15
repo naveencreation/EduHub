@@ -27,16 +27,16 @@ export default function Navbar() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center gap-8">
             <Link href="/" className="flex flex-shrink-0 items-center gap-2.5">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-brand-emerald rounded-lg flex items-center justify-center">
                 <BookOpen className="h-4.5 w-4.5 text-white h-[18px] w-[18px]" />
               </div>
-              <span className="font-bold text-lg tracking-tight text-slate-900 hidden sm:block">EduHub</span>
+              <span className="font-bold text-lg tracking-tight text-brand-dark hidden sm:block">EduHub</span>
             </Link>
 
             {/* Desktop nav links */}
@@ -47,8 +47,8 @@ export default function Navbar() {
                   href={link.href}
                   className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                     isActive(link.href)
-                      ? 'text-primary bg-primary-light'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      ? 'text-brand-emerald bg-emerald-50'
+                      : 'text-brand-slate hover:text-brand-dark hover:bg-brand-light-bg'
                   }`}
                 >
                   {link.label}
@@ -65,7 +65,7 @@ export default function Navbar() {
                 <input
                   id="search"
                   name="search"
-                  className="w-56 lg:w-72 rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-56 lg:w-72 rounded-lg border border-slate-200 bg-brand-light-bg py-2 pl-9 pr-3 text-sm text-brand-dark placeholder:text-slate-400 focus:border-brand-emerald focus:outline-none focus:ring-2 focus:ring-emerald-200 transition-all"
                   placeholder="Search topics, courses..."
                   type="search"
                   value={searchQuery}
@@ -76,7 +76,7 @@ export default function Navbar() {
 
             <button
               type="button"
-              className="sm:hidden p-2 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+              className="sm:hidden p-2 rounded-md text-slate-500 hover:bg-brand-light-bg hover:text-brand-dark transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               <span className="sr-only">Toggle menu</span>

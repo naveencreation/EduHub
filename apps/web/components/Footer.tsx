@@ -9,13 +9,13 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-950 text-slate-400 mt-auto">
+    <footer className="bg-brand-dark text-slate-400 mt-auto">
       <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-10">
           {/* Brand */}
           <div className="flex flex-col items-center sm:items-start gap-3">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center">
+              <div className="w-7 h-7 bg-brand-emerald rounded-md flex items-center justify-center">
                 <BookOpen className="h-4 w-4 text-white" />
               </div>
               <span className="font-bold text-white text-base">EduHub</span>
@@ -40,7 +40,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-800 pt-8">
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-700 pt-8">
           <p className="text-xs text-slate-600">
             &copy; {new Date().getFullYear()} EduHub. All rights reserved.
           </p>

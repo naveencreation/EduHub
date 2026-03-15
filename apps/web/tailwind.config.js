@@ -8,12 +8,19 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#4f46e5',
-          dark: '#4338ca',
-          light: '#eef2ff',
+          DEFAULT: '#10B981',
+          dark: '#059669',
+          light: '#ecfdf5',
         },
-        secondary: '#0ea5e9',
-        accent: '#f59e0b',
+        secondary: '#64748b',
+        accent: '#F97316',
+        'brand': {
+          emerald: '#10B981',
+          coral: '#F97316',
+          slate: '#374151',
+          'light-bg': '#F3F4F6',
+          dark: '#1F2937',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

@@ -25,15 +25,15 @@ export function ErrorUI({
     },
     warning: {
       container: 'bg-amber-50 border-amber-200',
-      icon: 'text-amber-600',
+      icon: 'text-accent',
       title: 'text-amber-900',
       message: 'text-amber-700',
     },
     info: {
-      container: 'bg-blue-50 border-blue-200',
-      icon: 'text-blue-600',
-      title: 'text-blue-900',
-      message: 'text-blue-700',
+      container: 'bg-emerald-50 border-emerald-200',
+      icon: 'text-brand-emerald',
+      title: 'text-emerald-900',
+      message: 'text-emerald-700',
     },
   };
 
@@ -51,8 +51,8 @@ export function ErrorUI({
             variant === 'error'
               ? 'bg-red-600 text-white hover:bg-red-700'
               : variant === 'warning'
-              ? 'bg-amber-600 text-white hover:bg-amber-700'
-              : 'bg-blue-600 text-white hover:bg-blue-700'
+              ? 'bg-accent text-white hover:bg-orange-500'
+              : 'bg-brand-emerald text-white hover:bg-emerald-600'
           }`}
         >
           <RefreshCw className="w-4 h-4" />

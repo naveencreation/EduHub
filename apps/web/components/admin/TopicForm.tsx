@@ -65,7 +65,7 @@ export default function TopicForm({ initialData, topicId }: TopicFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-2xl bg-white p-6 rounded-md shadow-sm border">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-2xl bg-white p-6 rounded-md shadow-sm border border-slate-200">
       {error && (
         <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm">
           {error}
@@ -74,7 +74,7 @@ export default function TopicForm({ initialData, topicId }: TopicFormProps) {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Topic Name *</label>
+          <label className="block text-sm font-medium text-brand-dark">Topic Name *</label>
           <input
             {...register('name')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border"
@@ -84,7 +84,7 @@ export default function TopicForm({ initialData, topicId }: TopicFormProps) {
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Slug (Optional)</label>
+          <label className="block text-sm font-medium text-brand-dark">Slug (Optional)</label>
           <input
             {...register('slug')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border"
@@ -95,7 +95,7 @@ export default function TopicForm({ initialData, topicId }: TopicFormProps) {
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <label className="block text-sm font-medium text-brand-dark">Description</label>
           <textarea
             {...register('description')}
             rows={4}
@@ -104,7 +104,7 @@ export default function TopicForm({ initialData, topicId }: TopicFormProps) {
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Thumbnail URL</label>
+          <label className="block text-sm font-medium text-brand-dark">Thumbnail URL</label>
           <input
             {...register('thumbnailUrl')}
             type="url"
@@ -125,18 +125,18 @@ export default function TopicForm({ initialData, topicId }: TopicFormProps) {
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 border-t pt-4">
+      <div className="flex justify-end gap-3 border-t border-slate-200 pt-4">
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-md border bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+          className="rounded-md border border-slate-300 bg-white py-2 px-4 text-sm font-medium text-brand-slate shadow-sm hover:bg-brand-light-bg"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-md bg-black py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-800 disabled:bg-gray-400"
+          className="rounded-md bg-brand-emerald py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-emerald-600 disabled:bg-slate-400"
         >
           {isSubmitting ? 'Saving...' : isEditing ? 'Update Topic' : 'Create Topic'}
         </button>
