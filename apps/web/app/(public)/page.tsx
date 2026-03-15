@@ -119,7 +119,7 @@ export default async function HomePage() {
       <SchemaMarkup />
 
       {/* ─── Hero ─── */}
-      <section className="relative bg-white pt-20 pb-20 sm:pt-28 sm:pb-28 overflow-hidden">
+      <section className="relative bg-white pt-16 pb-16 sm:pt-24 sm:pb-20 lg:pt-28 lg:pb-24 overflow-hidden">
         {/* Soft dot grid background */}
         <div
           className="absolute inset-0 -z-10 opacity-30"
@@ -139,7 +139,7 @@ export default async function HomePage() {
                 <span className="text-xs font-semibold text-brand-emerald tracking-wide uppercase">Free Learning Platform</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-brand-dark leading-[1.1] mb-6">
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tight text-brand-dark leading-tight mb-6">
                 Learn anything,
                 <span className="text-brand-emerald"> completely free.</span>
               </h1>
@@ -147,7 +147,7 @@ export default async function HomePage() {
                 Explore curated courses, lessons, and hands-on projects — no subscription or gatekeeping.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-12">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-12">
                 <Link
                   href="/topics"
                   aria-label="Browse topics"
@@ -165,8 +165,8 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-start gap-3 rounded-xl bg-emerald-50 p-4 border border-emerald-100">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 lg:gap-6">
+                <div className="flex items-start gap-3 rounded-xl bg-emerald-50 p-4 sm:p-5 border border-emerald-100">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-emerald text-white shrink-0">
                     <Layers className="w-5 h-5" />
                   </div>
@@ -175,7 +175,7 @@ export default async function HomePage() {
                     <p className="text-xs text-slate-600 mt-1">No paywalls, no subscriptions, ever.</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 rounded-xl bg-orange-50 p-4 border border-orange-100">
+                <div className="flex items-start gap-3 rounded-xl bg-orange-50 p-4 sm:p-5 border border-orange-100">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-white shrink-0">
                     <ChevronRight className="w-5 h-5" />
                   </div>
@@ -184,7 +184,7 @@ export default async function HomePage() {
                     <p className="text-xs text-slate-600 mt-1">Pick a course and move at your speed.</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 rounded-xl bg-emerald-50 p-4 border border-emerald-100">
+                <div className="flex items-start gap-3 rounded-xl bg-emerald-50 p-4 sm:p-5 border border-emerald-100">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-emerald text-white shrink-0">
                     <AlertCircle className="w-5 h-5" />
                   </div>
@@ -193,7 +193,7 @@ export default async function HomePage() {
                     <p className="text-xs text-slate-600 mt-1">No hidden fees, no trial periods — learning.</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 rounded-xl bg-blue-50 p-4 border border-blue-100">
+                <div className="flex items-start gap-3 rounded-xl bg-blue-50 p-4 sm:p-5 border border-blue-100">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-white shrink-0">
                     <BookOpen className="w-5 h-5" />
                   </div>
@@ -219,15 +219,15 @@ export default async function HomePage() {
       </section>
 
       {/* ─── Topics Grid ─── */}
-      <section className="py-20 bg-slate-50 border-t border-slate-200">
+      <section className="py-16 sm:py-20 bg-slate-50 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
-            <div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6 mb-12\">
+            <div className="flex-1">
               <p className="text-xs font-semibold text-brand-emerald uppercase tracking-widest mb-2">Categories</p>
-              <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark tracking-tight">Browse by Topic</h2>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-dark tracking-tight">Browse by Topic</h2>
               <p className="text-sm text-slate-600 mt-2">Explore our learning categories and find what interests you</p>
             </div>
-            <Link href="/topics" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-emerald hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald focus-visible:ring-offset-2 transition-colors">
+            <Link href="/topics" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-emerald hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald focus-visible:ring-offset-2 transition-colors whitespace-nowrap">
               View All Topics <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -240,20 +240,20 @@ export default async function HomePage() {
                   <Link
                     key={topic.id}
                     href={`/topics/${topic.slug}`}
-                    className={`group flex flex-col gap-4 p-6 rounded-xl ${palette.bg} border border-slate-100 hover:border-slate-300 hover:shadow-lg hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald focus-visible:ring-offset-2`}
+                    className={`group flex flex-col gap-4 p-5 sm:p-6 rounded-xl ${palette.bg} border border-slate-100 hover:border-slate-300 hover:shadow-lg hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald focus-visible:ring-offset-2`}
                   >
                     <div className={`w-12 h-12 rounded-lg ${palette.icon} flex items-center justify-center shrink-0 shadow-md`}>
                       <Layers className="w-6 h-6" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-base text-brand-dark mb-2 group-hover:text-brand-emerald transition-colors truncate">
+                      <h3 className="font-semibold text-sm sm:text-base text-brand-dark mb-2 group-hover:text-brand-emerald transition-colors truncate">
                         {topic.name}
                       </h3>
-                      <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed">
+                      <p className="text-sm text-slate-600 line-clamp-2 leading-snug">
                         {topic.description || 'Explore lessons and courses on this topic.'}
                       </p>
                     </div>
-                    <div className={`pt-3 border-t border-slate-200 flex items-center gap-3 text-xs font-semibold ${palette.badge}`}>
+                    <div className={`pt-3 border-t border-slate-200 flex items-center gap-3 text-xs font-medium leading-normal ${palette.badge}`}>
                       <span className="flex items-center gap-1">
                         <span className="inline-block w-1 h-1 rounded-full bg-current"></span>
                         {topic._count?.courses || 0} {topic._count?.courses === 1 ? 'Course' : 'Courses'}
@@ -284,15 +284,15 @@ export default async function HomePage() {
       </section>
 
       {/* ─── Featured Courses ─── */}
-      <section className="py-20 bg-white border-t border-slate-200">
+      <section className="py-16 sm:py-20 bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
-            <div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6 mb-12">
+            <div className="flex-1">
               <p className="text-xs font-semibold text-brand-emerald uppercase tracking-widest mb-2">Learning Paths</p>
-              <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark tracking-tight">Featured Courses</h2>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-dark tracking-tight">Featured Courses</h2>
               <p className="text-sm text-slate-600 mt-2">Discover our most popular courses and expand your skills</p>
             </div>
-            <Link href="/courses" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-emerald hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald focus-visible:ring-offset-2 transition-colors">
+            <Link href="/courses" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-emerald hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald focus-visible:ring-offset-2 transition-colors whitespace-nowrap">
               View All Courses <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -324,11 +324,11 @@ export default async function HomePage() {
                     )}
                   </div>
 
-                  <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-base font-semibold text-brand-dark mb-2 group-hover:text-brand-emerald transition-colors line-clamp-2 leading-snug">
+                  <div className="p-5 sm:p-6 flex flex-col flex-1">
+                    <h3 className="text-sm sm:text-base font-semibold text-brand-dark mb-2 group-hover:text-brand-emerald transition-colors line-clamp-2 leading-snug">
                       {course.title}
                     </h3>
-                    <p className="text-sm text-slate-600 line-clamp-2 mb-4 flex-1 leading-relaxed">
+                    <p className="text-sm text-slate-600 line-clamp-2 mb-4 flex-1 leading-snug">
                       {course.description || 'Start learning with this comprehensive course.'}
                     </p>
                     <div className="flex items-center gap-2 text-xs font-medium text-brand-emerald mt-auto pt-4 border-t border-slate-100">
@@ -355,24 +355,24 @@ export default async function HomePage() {
       </section>
 
       {/* ─── CTA Banner ─── */}
-      <section className="relative bg-gradient-to-r from-brand-emerald to-emerald-700 py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-r from-brand-emerald to-emerald-700 py-20 sm:py-24 lg:py-28 overflow-hidden">
         {/* Decorative background elements */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-white blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 sm:w-80 h-80 lg:w-96 h-96 rounded-full bg-white blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 sm:w-80 h-80 lg:w-96 h-96 rounded-full bg-white blur-3xl" />
         </div>
 
-        <div className="relative max-w-4xl mx-auto px-4 text-center">
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-1.5 mb-6 border border-white/30">
             <span className="inline-block w-2 h-2 rounded-full bg-white/80"></span>
             <span className="text-xs font-semibold text-white uppercase tracking-wide">Limited Time Offer</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight leading-[1.1]">
-            Ready to <br className="hidden sm:block" />start learning?
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight leading-tight max-w-2xl mx-auto">
+            Ready to start learning?
           </h2>
 
-          <p className="text-lg text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-lg text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
             Join thousands of learners exploring free courses, lessons, and projects. Everything you need to grow is here—no hidden fees, no paywalls.
           </p>
 
@@ -391,7 +391,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <p className="text-sm text-white/70 mt-8">
+          <p className="text-xs sm:text-sm text-white/70 mt-8">
             ✓ 100% free • ✓ No signup required • ✓ Learn at your own pace
           </p>
         </div>
