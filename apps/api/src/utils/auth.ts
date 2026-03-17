@@ -48,5 +48,21 @@ export const hashPassword = async (password: string): Promise<string> => {
 
 // Compare password
 export const comparePasswords = async (password: string, hash: string): Promise<boolean> => {
-  return bcrypt.compare(password, hash);
+  try {
+    if (!password || !hash) {
+      console.error("❌ comparePasswords: Missing password or hash", {
+        passwordExists: !!password,
+        hashExists: !!hash,
+      });
+      return false;
+    }
+    const result = await bcrypt.compare(password, hash);
+    return result;
+  } catch (error) {
+    console.error("❌ Error comparing passwords:", {
+      message: error instanceof Error ? error.message : String(error),
+      error,
+    });
+    throw new Error(`Password comparison failed: ${error instanceof Error ? error.message : String(error)}`);
+  }
 };

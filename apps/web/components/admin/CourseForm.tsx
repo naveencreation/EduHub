@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -19,9 +19,9 @@ const courseSchema = z.object({
 type CourseFormValues = z.infer<typeof courseSchema>;
 
 interface CourseFormProps {
-  initialData?: any;
-  courseId?: string;
-  topics?: any[];
+  readonly initialData?: any;
+  readonly courseId?: string;
+  readonly topics?: any[];
 }
 
 export default function CourseForm({ initialData, courseId, topics = [] }: CourseFormProps) {
@@ -67,6 +67,15 @@ export default function CourseForm({ initialData, courseId, topics = [] }: Cours
     }
   };
 
+  let submitButtonText: string;
+  if (isSubmitting) {
+    submitButtonText = 'Saving...';
+  } else if (isEditing) {
+    submitButtonText = 'Update Course';
+  } else {
+    submitButtonText = 'Create Course';
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-2xl bg-white p-6 rounded-md shadow-sm border">
       {error && (
@@ -77,8 +86,9 @@ export default function CourseForm({ initialData, courseId, topics = [] }: Cours
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Topic *</label>
+          <label htmlFor="topicId" className="block text-sm font-medium text-gray-700">Topic *</label>
           <select
+            id="topicId"
             {...register('topicId')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border bg-white"
           >
@@ -91,8 +101,9 @@ export default function CourseForm({ initialData, courseId, topics = [] }: Cours
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Course Title *</label>
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700">Course Title *</label>
           <input
+            id="title"
             {...register('title')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border"
             placeholder="e.g. Algebra 101"
@@ -101,8 +112,9 @@ export default function CourseForm({ initialData, courseId, topics = [] }: Cours
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Slug (Optional)</label>
+          <label htmlFor="slug" className="block text-sm font-medium text-gray-700">Slug (Optional)</label>
           <input
+            id="slug"
             {...register('slug')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border"
             placeholder="e.g. algebra-101 (leave blank to auto-generate)"
@@ -111,8 +123,9 @@ export default function CourseForm({ initialData, courseId, topics = [] }: Cours
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
           <textarea
+            id="description"
             {...register('description')}
             rows={4}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border"
@@ -120,8 +133,9 @@ export default function CourseForm({ initialData, courseId, topics = [] }: Cours
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Thumbnail URL</label>
+          <label htmlFor="thumbnailUrl" className="block text-sm font-medium text-gray-700">Thumbnail URL</label>
           <input
+            id="thumbnailUrl"
             {...register('thumbnailUrl')}
             type="url"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border"
@@ -131,11 +145,12 @@ export default function CourseForm({ initialData, courseId, topics = [] }: Cours
 
         <div className="sm:col-span-2 flex items-center">
           <input
+            id="isPublished"
             {...register('isPublished')}
             type="checkbox"
             className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
           />
-          <label className="ml-2 block text-sm text-gray-900">
+          <label htmlFor="isPublished" className="ml-2 block text-sm text-gray-900">
             Publish this course (visible to public)
           </label>
         </div>
@@ -154,7 +169,7 @@ export default function CourseForm({ initialData, courseId, topics = [] }: Cours
           disabled={isSubmitting}
           className="rounded-md bg-brand-emerald py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-emerald-600 disabled:bg-slate-400"
         >
-          {isSubmitting ? 'Saving...' : isEditing ? 'Update Course' : 'Create Course'}
+          {submitButtonText}
         </button>
       </div>
     </form>

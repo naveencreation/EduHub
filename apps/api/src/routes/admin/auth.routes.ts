@@ -59,14 +59,23 @@ router.post(
         },
       });
     } catch (error) {
-      console.error("Login route error:", error);
-      return res.status(500).json({ error: "Internal server error" });
+      console.error("❌ Login route error:", {
+        message: error instanceof Error ? error.message : String(error),
+        name: error instanceof Error ? error.name : "Unknown",
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      return res.status(500).json({ 
+        error: "Internal server error",
+        details: process.env.NODE_ENV === "development" 
+          ? (error instanceof Error ? error.message : String(error))
+          : undefined
+      });
     }
   }
 );
 
 // POST /api/admin/auth/logout
-router.post("/logout", (req: Request, res: Response) => {
+router.post("/logout", (_req: Request, res: Response) => {
   res.clearCookie("admin_token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -75,5 +84,59 @@ router.post("/logout", (req: Request, res: Response) => {
   
   return res.status(200).json({ message: "Logout successful" });
 });
+
+// DEBUG: GET /api/admin/auth/debug (only in development)
+if (process.env.NODE_ENV !== "production") {
+  router.get("/debug", async (_req: Request, res: Response) => {
+    try {
+      const adminEmail = process.env.ADMIN_EMAIL || "admin@eduhub.com";
+      const admin = await prisma.admin.findUnique({
+        where: { email: adminEmail },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          createdAt: true,
+          updatedAt: true,
+          lastLoginAt: true,
+          passwordHash: true, // Only in debug mode
+        },
+      });
+
+      if (!admin) {
+        return res.status(404).json({ 
+          error: "Admin not found",
+          searchedEmail: adminEmail,
+          envVarsSet: {
+            ADMIN_EMAIL: !!process.env.ADMIN_EMAIL,
+            ADMIN_PASSWORD: !!process.env.ADMIN_PASSWORD,
+            DATABASE_URL: !!process.env.DATABASE_URL,
+            JWT_SECRET: !!process.env.JWT_SECRET,
+          },
+        });
+      }
+
+      return res.status(200).json({
+        message: "Admin debug info",
+        admin: {
+          id: admin.id,
+          email: admin.email,
+          name: admin.name,
+          createdAt: admin.createdAt,
+          updatedAt: admin.updatedAt,
+          lastLoginAt: admin.lastLoginAt,
+          passwordHashLength: admin.passwordHash.length,
+          passwordHashPrefix: admin.passwordHash.substring(0, 20),
+        },
+      });
+    } catch (error) {
+      console.error("Debug endpoint error:", error);
+      return res.status(500).json({
+        error: "Debug check failed",
+        message: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+}
 
 export default router;

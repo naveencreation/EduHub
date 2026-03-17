@@ -4,7 +4,7 @@ import { prisma } from "../../db";
 const router = Router();
 
 // GET /api/courses - List all published courses with topic info
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (_req: Request, res: Response) => {
   try {
     const courses = await prisma.course.findMany({
       where: { isPublished: true },

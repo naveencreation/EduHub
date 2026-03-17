@@ -1,5 +1,4 @@
 {
-  "$schema": "https://turbo.build/json-schema.json",
   "globalDependencies": [
     ".env",
     ".env.local"
@@ -24,6 +23,10 @@
     },
     "type-check": {
       "outputs": []
+    },
+    "test": {
+      "outputs": ["coverage/**"],
+      "cache": false
     },
     "db:migrate": {
       "cache": false

@@ -21,6 +21,7 @@ export declare const createContentSchema: z.ZodObject<{
         isPublished: boolean;
         topicId: string;
         title: string;
+        tags?: string[] | undefined;
         body?: string | null | undefined;
         slug?: string | undefined;
         description?: string | null | undefined;
@@ -29,11 +30,11 @@ export declare const createContentSchema: z.ZodObject<{
         fileUrl?: string | null | undefined;
         streamId?: string | null | undefined;
         durationSecs?: number | null | undefined;
-        tags?: string[] | undefined;
     }, {
         type: "VIDEO" | "AUDIO" | "IMAGE" | "BLOG";
         topicId: string;
         title: string;
+        tags?: string[] | undefined;
         body?: string | null | undefined;
         slug?: string | undefined;
         description?: string | null | undefined;
@@ -44,7 +45,6 @@ export declare const createContentSchema: z.ZodObject<{
         fileUrl?: string | null | undefined;
         streamId?: string | null | undefined;
         durationSecs?: number | null | undefined;
-        tags?: string[] | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
@@ -53,6 +53,7 @@ export declare const createContentSchema: z.ZodObject<{
         isPublished: boolean;
         topicId: string;
         title: string;
+        tags?: string[] | undefined;
         body?: string | null | undefined;
         slug?: string | undefined;
         description?: string | null | undefined;
@@ -61,13 +62,13 @@ export declare const createContentSchema: z.ZodObject<{
         fileUrl?: string | null | undefined;
         streamId?: string | null | undefined;
         durationSecs?: number | null | undefined;
-        tags?: string[] | undefined;
     };
 }, {
     body: {
         type: "VIDEO" | "AUDIO" | "IMAGE" | "BLOG";
         topicId: string;
         title: string;
+        tags?: string[] | undefined;
         body?: string | null | undefined;
         slug?: string | undefined;
         description?: string | null | undefined;
@@ -78,7 +79,6 @@ export declare const createContentSchema: z.ZodObject<{
         fileUrl?: string | null | undefined;
         streamId?: string | null | undefined;
         durationSecs?: number | null | undefined;
-        tags?: string[] | undefined;
     };
 }>;
 export declare const updateContentSchema: z.ZodObject<{
@@ -97,6 +97,7 @@ export declare const updateContentSchema: z.ZodObject<{
         isPublished: z.ZodOptional<z.ZodBoolean>;
         tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
     }, "strip", z.ZodTypeAny, {
+        tags?: string[] | undefined;
         body?: string | null | undefined;
         slug?: string | undefined;
         description?: string | null | undefined;
@@ -109,8 +110,8 @@ export declare const updateContentSchema: z.ZodObject<{
         fileUrl?: string | null | undefined;
         streamId?: string | null | undefined;
         durationSecs?: number | null | undefined;
-        tags?: string[] | undefined;
     }, {
+        tags?: string[] | undefined;
         body?: string | null | undefined;
         slug?: string | undefined;
         description?: string | null | undefined;
@@ -123,10 +124,10 @@ export declare const updateContentSchema: z.ZodObject<{
         fileUrl?: string | null | undefined;
         streamId?: string | null | undefined;
         durationSecs?: number | null | undefined;
-        tags?: string[] | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
+        tags?: string[] | undefined;
         body?: string | null | undefined;
         slug?: string | undefined;
         description?: string | null | undefined;
@@ -139,10 +140,10 @@ export declare const updateContentSchema: z.ZodObject<{
         fileUrl?: string | null | undefined;
         streamId?: string | null | undefined;
         durationSecs?: number | null | undefined;
-        tags?: string[] | undefined;
     };
 }, {
     body: {
+        tags?: string[] | undefined;
         body?: string | null | undefined;
         slug?: string | undefined;
         description?: string | null | undefined;
@@ -155,7 +156,6 @@ export declare const updateContentSchema: z.ZodObject<{
         fileUrl?: string | null | undefined;
         streamId?: string | null | undefined;
         durationSecs?: number | null | undefined;
-        tags?: string[] | undefined;
     };
 }>;
 export declare const reorderContentSchema: z.ZodObject<{

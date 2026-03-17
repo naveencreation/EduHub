@@ -39,7 +39,7 @@ router.get("/search", async (req: Request, res: Response) => {
 });
 
 // GET /api/content/latest - 12 most recently published lessons
-router.get("/latest", async (req: Request, res: Response) => {
+router.get("/latest", async (_req: Request, res: Response) => {
   try {
     const content = await prisma.content.findMany({
       where: {

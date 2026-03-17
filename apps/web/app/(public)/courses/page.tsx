@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookOpen, Search } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import type { Course } from '@/lib/api-types';
 
 async function getCourses(): Promise<Course[]> {

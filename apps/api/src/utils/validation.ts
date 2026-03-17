@@ -51,7 +51,7 @@ export function validatePageSize(take: unknown, max = 100): number {
 
 export function validateSearchQuery(q: unknown): string {
   if (typeof q !== 'string') {
-    throw new Error('Search query must be a string');
+    throw new TypeError('Search query must be a string');
   }
   const query = q.trim();
   if (query.length === 0) {

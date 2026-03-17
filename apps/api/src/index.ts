@@ -2,7 +2,6 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 
 // Load environment variables
@@ -13,31 +12,63 @@ const PORT = process.env.PORT || 5000;
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
 // Middleware: Security
-app.use(helmet());
+app.use(helmet({
+  strictTransportSecurity: { maxAge: 31536000, includeSubDomains: true },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+    },
+  },
+  frameguard: { action: "deny" },
+  noSniff: true,
+}));
+
+// Middleware: CORS
 app.use(
   cors({
     origin: FRONTEND_URL,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    maxAge: 86400,
   })
 );
 
+// Middleware: Compression (requires: npm install compression)
+// app.use(compression({ level: 6, threshold: 1024 }));
+
+// Middleware: Request ID tracking
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const requestId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+  (req as any).id = requestId;
+  res.setHeader("X-Request-ID", requestId);
+  next();
+});
+
 // Middleware: Parsing
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 
 // Middleware: Rate limiting (for login endpoint)
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs
-  message: "Too many login attempts, please try again later",
-});
+// Uncomment when compression is installed via npm install compression
+// const loginLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 5, // limit each IP to 5 requests per windowMs
+//   message: "Too many login attempts, please try again later",
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
-// Health check endpoint
-app.get("/api/health", (req: Request, res: Response) => {
+// Health check endpoint with cache headers
+app.get("/api/health", (_req: Request, res: Response) => {
+  res.set("Cache-Control", "public, max-age=30");
   res.json({
     status: "ok",
     timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
   });
 });
 
@@ -66,7 +97,7 @@ app.use("/api/admin/content", requireAuth, adminContentRoutes);
 app.use("/api/admin/tags", requireAuth, adminTagRoutes);
 
 // Error handling middleware
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   const status = err.status || err.statusCode || 500;
   const message =
     process.env.NODE_ENV === "production"

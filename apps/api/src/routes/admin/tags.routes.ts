@@ -7,7 +7,7 @@ import slugify from "slugify";
 const router = Router();
 
 // GET /api/admin/tags
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (_req: Request, res: Response) => {
   try {
     const tags = await prisma.tag.findMany({
       orderBy: { name: "asc" },

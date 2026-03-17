@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { BookOpen, Layers, ChevronRight, GraduationCap, ArrowRight, AlertCircle } from 'lucide-react';
 import type { Topic, Course } from '@/lib/api-types';
 
@@ -221,19 +220,39 @@ export default async function HomePage() {
       {/* ─── Topics Grid ─── */}
       <section className="py-16 sm:py-20 bg-slate-50 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6 mb-12\">
-            <div className="flex-1">
-              <p className="text-xs font-semibold text-brand-emerald uppercase tracking-widest mb-2">Categories</p>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-dark tracking-tight">Browse by Topic</h2>
-              <p className="text-sm text-slate-600 mt-2">Explore our learning categories and find what interests you</p>
+          <div className="grid gap-8 lg:gap-12 lg:grid-cols-12 lg:items-center">
+            
+            {/* Left Column: Illustration ONLY */}
+            <div className="lg:col-span-5 hidden md:flex items-center justify-center lg:justify-start">
+              <div className="w-full max-w-sm lg:max-w-md">
+                <img 
+                  src="/illustrations/Learning-rafiki.svg" 
+                  alt="Student exploring learning topics"
+                  className="w-full h-auto drop-shadow-lg"
+                />
+              </div>
             </div>
-            <Link href="/topics" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-emerald hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald focus-visible:ring-offset-2 transition-colors whitespace-nowrap">
-              View All Topics <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
 
-          {topics.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+            {/* Right Column: Header + Cards */}
+            <div className="lg:col-span-7 md:col-span-6 col-span-1">
+              
+              {/* Header Section */}
+              <div className="mb-10">
+                <p className="text-xs font-semibold text-brand-emerald uppercase tracking-widest mb-2">Categories</p>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-dark tracking-tight mb-3">Browse by Topic</h2>
+                <p className="text-sm text-slate-600">Explore our learning categories and find what interests you</p>
+              </div>
+
+              {/* View All Topics Link */}
+              <div className="mb-8">
+                <Link href="/topics" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-emerald hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-emerald focus-visible:ring-offset-2 transition-colors">
+                  View All Topics <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              {/* Cards Grid */}
+              {topics.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-5">
               {topics.map((topic: Topic, i: number) => {
                 const palette = TOPIC_COLORS[i % TOPIC_COLORS.length];
                 return (
@@ -267,19 +286,21 @@ export default async function HomePage() {
                   </Link>
                 );
               })}
+                </div>
+              ) : (
+                <div className="text-center py-16 rounded-2xl bg-white border border-slate-200">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-50 mb-4">
+                    <Layers className="w-7 h-7 text-brand-emerald" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-brand-dark mb-2">No topics yet</h3>
+                  <p className="text-sm text-slate-600 mb-4">Check back soon! Topics will be added regularly.</p>
+                  <Link href="/courses" className="inline-flex items-center gap-2 rounded-lg bg-brand-emerald px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition-colors">
+                    Browse Courses Instead
+                  </Link>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="text-center py-20 rounded-2xl bg-white border border-slate-200">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-50 mb-4">
-                <Layers className="w-7 h-7 text-brand-emerald" />
-              </div>
-              <h3 className="text-lg font-semibold text-brand-dark mb-2">No topics yet</h3>
-              <p className="text-sm text-slate-600 mb-4">Check back soon! Topics will be added regularly.</p>
-              <Link href="/courses" className="inline-flex items-center gap-2 rounded-lg bg-brand-emerald px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition-colors">
-                Browse Courses Instead
-              </Link>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 

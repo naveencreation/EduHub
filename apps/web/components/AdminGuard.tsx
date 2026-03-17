@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '../lib/store';
 
-export default function AdminGuard({ children }: { children: React.ReactNode }) {
+export default function AdminGuard({ children }: { readonly children: React.ReactNode }) {
   const { isAdminAuthenticated } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();

@@ -19,7 +19,7 @@ async function main() {
 
     const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
-    const admin = await prisma.admin.create({
+    await prisma.admin.create({
       data: {
         email: adminEmail,
         passwordHash: hashedPassword,
@@ -28,7 +28,7 @@ async function main() {
     });
 
     // Create sample tags
-    const tags = await Promise.all([
+    await Promise.all([
       prisma.tag.create({
         data: {
           name: "beginner",

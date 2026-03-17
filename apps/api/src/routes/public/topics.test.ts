@@ -8,6 +8,7 @@ vi.mock('../../db', async () => {
       topic: {
         findMany: vitestVi.fn(),
         findFirst: vitestVi.fn(),
+        count: vitestVi.fn(),
       },
     },
   };
@@ -18,11 +19,13 @@ import { prisma } from '../../db';
 
 const mockFindMany = prisma.topic.findMany as unknown as ReturnType<typeof vi.fn>;
 const mockFindFirst = prisma.topic.findFirst as unknown as ReturnType<typeof vi.fn>;
+const mockCount = prisma.topic.count as unknown as ReturnType<typeof vi.fn>;
 
 describe('GET /api/topics', () => {
   beforeEach(() => {
     mockFindMany.mockReset();
     mockFindFirst.mockReset();
+    mockCount.mockReset();
   });
 
   it('returns a list of topics', async () => {
@@ -34,28 +37,46 @@ describe('GET /api/topics', () => {
         description: 'Test description',
         sortOrder: 1,
         isPublished: true,
+        thumbnailUrl: null,
         _count: { courses: 0, content: 0 },
       },
     ]);
+    mockCount.mockResolvedValue(1);
 
     const res = await request(app).get('/api/topics');
 
     expect(res.status).toBe(200);
-    expect(res.body).toHaveLength(1);
-    expect(res.body[0]).toMatchObject({ name: 'Test Topic', slug: 'test-topic' });
+    expect(res.body.data).toHaveLength(1);
+    expect(res.body.data[0]).toMatchObject({ name: 'Test Topic', slug: 'test-topic' });
+    expect(res.body.pagination).toMatchObject({
+      page: 1,
+      limit: 10,
+      total: 1,
+      pages: 1,
+    });
     expect(mockFindMany).toHaveBeenCalledWith({
       where: { isPublished: true },
-      orderBy: { sortOrder: 'asc' },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        thumbnailUrl: true,
+        sortOrder: true,
         _count: {
           select: { courses: true, content: true },
         },
       },
+      orderBy: { sortOrder: 'asc' },
+      skip: 0,
+      take: 10,
     });
+    expect(mockCount).toHaveBeenCalledWith({ where: { isPublished: true } });
   });
 
   it('returns 500 when the database throws', async () => {
     mockFindMany.mockRejectedValue(new Error('boom'));
+    mockCount.mockRejectedValue(new Error('boom'));
 
     const res = await request(app).get('/api/topics');
 

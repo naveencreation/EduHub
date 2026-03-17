@@ -46,7 +46,7 @@ router.get("/:slug/content", async (req: Request, res: Response) => {
 });
 
 // GET /api/tags - Get all tags (optional but useful for public filtering UI)
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (_req: Request, res: Response) => {
   try {
     const tags = await prisma.tag.findMany({
       orderBy: { name: "asc" },

@@ -9,8 +9,7 @@ import {
   Library,
   Video,
   Tags,
-  LogOut,
-  Settings
+  LogOut
 } from 'lucide-react';
 import api from '../lib/api';
 

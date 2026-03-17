@@ -46,7 +46,24 @@ const hashPassword = async (password) => {
 exports.hashPassword = hashPassword;
 // Compare password
 const comparePasswords = async (password, hash) => {
-    return bcryptjs_1.default.compare(password, hash);
+    try {
+        if (!password || !hash) {
+            console.error("❌ comparePasswords: Missing password or hash", {
+                passwordExists: !!password,
+                hashExists: !!hash,
+            });
+            return false;
+        }
+        const result = await bcryptjs_1.default.compare(password, hash);
+        return result;
+    }
+    catch (error) {
+        console.error("❌ Error comparing passwords:", {
+            message: error instanceof Error ? error.message : String(error),
+            error,
+        });
+        throw new Error(`Password comparison failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
 };
 exports.comparePasswords = comparePasswords;
 //# sourceMappingURL=auth.js.map

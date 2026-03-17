@@ -16,7 +16,7 @@ export const requireAuth = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void | Response> => {
   try {
     // 1. Get token from HttpOnly cookie
     const token = req.cookies.admin_token;

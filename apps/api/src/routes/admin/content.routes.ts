@@ -277,7 +277,7 @@ router.post("/upload/presign", async (req: Request, res: Response) => {
 });
 
 /* istanbul ignore next */
-router.post("/upload/video", async (req: Request, res: Response) => {
+router.post("/upload/video", async (_req: Request, res: Response) => {
   try {
     const cloudflareStreamAccountId = process.env.CLOUDFLARE_STREAM_ACCOUNT_ID;
     const cloudflareApiToken = process.env.CLOUDFLARE_API_TOKEN;

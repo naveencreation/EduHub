@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { BookOpen, PlayCircle, Clock, CheckCircle2 } from 'lucide-react';
+import { BookOpen, PlayCircle, Clock } from 'lucide-react';
 import type { Course } from '@/lib/api-types';
 
 async function getCourse(slug: string): Promise<Course | null> {
